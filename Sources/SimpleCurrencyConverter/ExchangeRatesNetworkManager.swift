@@ -20,7 +20,7 @@ final class ExchangeRatesNetworkManager {
         do {
             let querryItems = [URLQueryItem(name: "access_key", value: apiKey),
                                URLQueryItem(name: "base", value: base.rawValue),
-                               URLQueryItem(name: "base", value: target.map { $0.rawValue }.joined(separator: ", "))]
+                               URLQueryItem(name: "symbols", value: target.map { $0.rawValue }.joined(separator: ", "))]
             var urlComps = URLComponents(string: url.absoluteString)
             urlComps?.queryItems = querryItems
             
