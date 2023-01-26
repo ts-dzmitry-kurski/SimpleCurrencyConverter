@@ -94,7 +94,7 @@ private extension SimpleCurrencyConverter {
     }
     
     func getExhangeRatesURL() -> (Result<URL, Error>) {
-        if let existingURL = URL(string: "https://api.exchangeratesapi.io/v1/latest") {
+        if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/latest") {
             return .success(existingURL)
         } else {
             return .failure(ExchangeRatesError.failedToConfigureURL)
@@ -102,7 +102,7 @@ private extension SimpleCurrencyConverter {
     }
     
     func getConvertURL() -> (Result<URL, Error>) {
-        if let existingURL = URL(string: "https://api.exchangeratesapi.io/v1/convert") {
+        if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/convert") {
             return .success(existingURL)
         } else {
             return .failure(ExchangeRatesError.failedToConfigureURL)
