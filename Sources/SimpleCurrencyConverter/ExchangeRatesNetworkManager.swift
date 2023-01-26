@@ -18,8 +18,7 @@ final class ExchangeRatesNetworkManager {
     @available(iOS 13.0.0, *)
     func requestExchangeRate(apiKey: String, url: URL, base: Currency, target: [Currency]) async throws -> Result<[String: Double], Error> {
         do {
-            let querryItems = [URLQueryItem(name: "access_key", value: apiKey),
-                               URLQueryItem(name: "base", value: base.rawValue),
+            let querryItems = [URLQueryItem(name: "base", value: base.rawValue),
                                URLQueryItem(name: "symbols", value: target.map { $0.rawValue }.joined(separator: ", "))]
             var urlComps = URLComponents(string: url.absoluteString)
             urlComps?.queryItems = querryItems
@@ -30,6 +29,7 @@ final class ExchangeRatesNetworkManager {
             
             var request = URLRequest(url: modifiedURL)
             request.httpMethod = "GET"
+            request.setValue(apiKey, forHTTPHeaderField: "apikey")
             
             let (data, response) = try await session.data(for: request)
             
@@ -52,8 +52,7 @@ final class ExchangeRatesNetworkManager {
     @available(iOS 13.0.0, *)
     func requestConvert(apiKey: String, url: URL, amount: Double, base: Currency, target: Currency) async throws -> Result<Double, Error> {
         do {
-            let querryItems = [URLQueryItem(name: "access_key", value: apiKey),
-                               URLQueryItem(name: "from", value: base.rawValue),
+            let querryItems = [URLQueryItem(name: "from", value: base.rawValue),
                                URLQueryItem(name: "to", value: target.rawValue),
                                URLQueryItem(name: "amount", value: String(amount))]
             var urlComps = URLComponents(string: url.absoluteString)
@@ -65,6 +64,7 @@ final class ExchangeRatesNetworkManager {
             
             var request = URLRequest(url: modifiedURL)
             request.httpMethod = "GET"
+            request.setValue(apiKey, forHTTPHeaderField: "apikey")
             
             let (data, response) = try await session.data(for: request)
             
