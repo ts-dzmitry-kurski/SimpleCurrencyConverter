@@ -7,7 +7,7 @@ public enum Currency: String {
     case EUR = "EUR"
 }
 
-final class SimpleCurrencyConverter: CurrencyConverterProtocol {
+final class CurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
@@ -83,7 +83,7 @@ final class SimpleCurrencyConverter: CurrencyConverterProtocol {
     }
 }
 
-private extension SimpleCurrencyConverter {
+private extension CurrencyConverter {
     
     func getAPIKeyFromPlistFile() -> String {
         guard let key = Bundle.main.infoDictionary?["ExchangeRatesAPIKey"] as? String else {
