@@ -7,7 +7,7 @@ public enum Currency: String {
     case EUR = "EUR"
 }
 
-public final class CurrencyConverter: CurrencyConverterProtocol {
+final class CurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
@@ -26,7 +26,7 @@ public final class CurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    public func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
+    func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
                          resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
@@ -43,7 +43,7 @@ public final class CurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    public func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency,
+    func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency,
                  resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
@@ -60,7 +60,7 @@ public final class CurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    public func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
+    func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
                  resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
