@@ -44,8 +44,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                     }
 
                     SimpleCurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).getExchangeRate(
-                        baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { rates in
-                        expect(preFetchedItem).to(equal(rates))
+                        baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { rates in                        expect(preFetchedItem).to(equal(rates))
                     } reject: { error in
                         fail("Error while rates test-request \(error)")
                     }

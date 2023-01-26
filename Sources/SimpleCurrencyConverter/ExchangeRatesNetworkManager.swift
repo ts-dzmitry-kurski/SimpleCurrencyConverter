@@ -27,15 +27,24 @@ final class ExchangeRatesNetworkManager {
                 return .failure(ExchangeRatesError.failedToConfigureURL)
             }
             
+            print(modifiedURL)
+            
             var request = URLRequest(url: modifiedURL)
             request.httpMethod = "GET"
             request.setValue(apiKey, forHTTPHeaderField: "apikey")
             
+            print(request.allHTTPHeaderFields)
+            
             let (data, response) = try await session.data(for: request)
+            
+            print(data)
+            print(response)
             
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 return .failure(ExchangeRatesError.invalidResponse)
             }
+            
+            print(httpResponse)
             
             if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                let jsonDict = jsonObject as? [String: Any],
@@ -62,15 +71,22 @@ final class ExchangeRatesNetworkManager {
                 return .failure(ExchangeRatesError.failedToConfigureURL)
             }
             
+            print(modifiedURL)
+            
             var request = URLRequest(url: modifiedURL)
             request.httpMethod = "GET"
             request.setValue(apiKey, forHTTPHeaderField: "apikey")
             
             let (data, response) = try await session.data(for: request)
             
+            print(data)
+            print(response)
+            
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 return .failure(ExchangeRatesError.invalidResponse)
             }
+            
+            print(httpResponse)
             
             if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                let jsonDict = jsonObject as? [String: Any],
