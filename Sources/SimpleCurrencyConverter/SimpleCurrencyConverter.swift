@@ -12,6 +12,14 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
     
+    /**
+     Initializer for a class that allows for the setting of an exchange rates API key and a URL session.
+     
+     If an exchange rates API key is provided, it is set to the class's exchangeRatesAPIKey property. If no exchange rates API key is provided, the class attempts to retrieve an API key from a plist file using the ExchangeRatesAPIKey keyword.
+     
+     If a URL session is provided, it is used to initialize the class's network manager.
+     If no URL session is provided, the class's network manager is initialized with the shared URL session.
+     */
     public init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) {
         if let exchangeRatesAPIKey = exchangeRatesAPIKey {
             self.exchangeRatesAPIKey = exchangeRatesAPIKey
