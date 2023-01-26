@@ -7,7 +7,7 @@ public enum Currency: String {
     case EUR = "EUR"
 }
 
-final class SimpleCurrencyConverter: CurrencyConverterProtocol {
+public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
@@ -26,27 +26,7 @@ final class SimpleCurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    func setup() {
-        self.exchangeRatesAPIKey = getAPIKeyFromPlistFile()
-        self.networkManager = ExchangeRatesNetworkManager(session: URLSession.shared)
-    }
-    
-    func setup(urlSession: URLSession) {
-        self.exchangeRatesAPIKey = getAPIKeyFromPlistFile()
-        self.networkManager = ExchangeRatesNetworkManager(session: urlSession)
-    }
-    
-    func setup(exchangeRatesAPIKey: String, urlSession: URLSession) {
-        self.exchangeRatesAPIKey = exchangeRatesAPIKey
-        self.networkManager = ExchangeRatesNetworkManager(session: urlSession)
-    }
-    
-    func setup(exchangeRatesAPIKey: String) {
-        self.exchangeRatesAPIKey = exchangeRatesAPIKey
-        self.networkManager = ExchangeRatesNetworkManager(session: URLSession.shared)
-    }
-    
-    func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
+    public func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
                          resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
@@ -63,7 +43,7 @@ final class SimpleCurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency,
+    public func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency,
                  resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
@@ -80,7 +60,7 @@ final class SimpleCurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
+    public func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
                  resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
         if #available(iOS 13.0, *) {
             Task {
