@@ -7,7 +7,7 @@ public enum Currency: String {
     case EUR = "EUR"
 }
 
-final class CurrencyConverter: CurrencyConverterProtocol {
+final class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
@@ -24,6 +24,26 @@ final class CurrencyConverter: CurrencyConverterProtocol {
         } else {
             self.networkManager = ExchangeRatesNetworkManager(session: URLSession.shared)
         }
+    }
+    
+    func setup() {
+        self.exchangeRatesAPIKey = getAPIKeyFromPlistFile()
+        self.networkManager = ExchangeRatesNetworkManager(session: URLSession.shared)
+    }
+    
+    func setup(urlSession: URLSession) {
+        self.exchangeRatesAPIKey = getAPIKeyFromPlistFile()
+        self.networkManager = ExchangeRatesNetworkManager(session: urlSession)
+    }
+    
+    func setup(exchangeRatesAPIKey: String, urlSession: URLSession) {
+        self.exchangeRatesAPIKey = exchangeRatesAPIKey
+        self.networkManager = ExchangeRatesNetworkManager(session: urlSession)
+    }
+    
+    func setup(exchangeRatesAPIKey: String) {
+        self.exchangeRatesAPIKey = exchangeRatesAPIKey
+        self.networkManager = ExchangeRatesNetworkManager(session: URLSession.shared)
     }
     
     func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
@@ -83,7 +103,7 @@ final class CurrencyConverter: CurrencyConverterProtocol {
     }
 }
 
-private extension CurrencyConverter {
+private extension SimpleCurrencyConverter {
     
     func getAPIKeyFromPlistFile() -> String {
         guard let key = Bundle.main.infoDictionary?["ExchangeRatesAPIKey"] as? String else {

@@ -43,7 +43,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                         fail("Failed to decode pre-fetched rates JSON")
                     }
 
-                    CurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).getExchangeRate(
+                    SimpleCurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).getExchangeRate(
                         baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { rates in
                         expect(preFetchedItem).to(equal(rates))
                     } reject: { error in
@@ -78,7 +78,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                         fail("Failed to decode pre-fetched convert JSON")
                     }
 
-                    CurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
+                    SimpleCurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
                         expect(preFetchedItem).to(equal(result["JPY"]))
                     } reject: { error in
                         fail("Error while rates test-request \(error)")
