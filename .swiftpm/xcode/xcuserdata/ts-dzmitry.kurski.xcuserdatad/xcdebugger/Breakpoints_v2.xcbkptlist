@@ -7,54 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AF7CD3B9-A2C1-462F-9447-54766121F044"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Tests/SimpleCurrencyConverterTests/SimpleCurrencyConverterTests.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
-            landmarkName = "spec()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "AF7CD3B9-A2C1-462F-9447-54766121F044 - f93d8fd01a6aeb18"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Dictionary&lt;Swift.String, Swift.Double&gt;) -&gt; () in closure #1 () -&gt; () in closure #4 () -&gt; () in closure #1 () -&gt; () in SimpleCurrencyConverterTests.SimpleCurrencyConverterSpecs.spec() -&gt; ()"
-                  moduleName = "SimpleCurrencyConverterTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ts-dzmitry.kurski/SimpleCurrencyConverter/Tests/SimpleCurrencyConverterTests/SimpleCurrencyConverterTests.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "94"
-                  endingLineNumber = "94"
-                  offsetFromSymbolStart = "24">
-               </Location>
-               <Location
-                  uuid = "AF7CD3B9-A2C1-462F-9447-54766121F044 - f93d8fd01a6aeb18"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Dictionary&lt;Swift.String, Swift.Double&gt;) -&gt; () in closure #1 () -&gt; () in closure #4 () -&gt; () in closure #1 () -&gt; () in SimpleCurrencyConverterTests.SimpleCurrencyConverterSpecs.spec() -&gt; ()"
-                  moduleName = "SimpleCurrencyConverterTests"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ts-dzmitry.kurski/SimpleCurrencyConverter/Tests/SimpleCurrencyConverterTests/SimpleCurrencyConverterTests.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "94"
-                  endingLineNumber = "94"
-                  offsetFromSymbolStart = "36">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "204071A0-B393-4E56-9F79-7BB2ACFBB459"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -63,9 +15,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "spec()"
-            landmarkType = "7">
+            endingLineNumber = "97">
             <Locations>
                <Location
                   uuid = "204071A0-B393-4E56-9F79-7BB2ACFBB459 - 52e3cf59061b3c11"
