@@ -10,11 +10,13 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
         describe("requests") {
             
             var session: URLSession!
+            var simpleCurrencyConverter: CurrencyConverterProtocol!
             
             beforeEach {
                 let configuration = URLSessionConfiguration.ephemeral
                 configuration.protocolClasses = [MockURLSessionProtocol.self]
                 session = URLSession(configuration: configuration)
+                simpleCurrencyConverter = SimpleCurrencyConverter.setup(exchangeRatesAPIKey: "mockApiKey", urlSession: session)
             }
             
             context("with pre-fetched json rates reponse") {
@@ -43,7 +45,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                         fail("Failed to decode pre-fetched rates JSON")
                     }
 
-                    SimpleCurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).getExchangeRate(
+                    simpleCurrencyConverter.getExchangeRate(
                         baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { rates in                        expect(preFetchedItem).to(equal(rates))
                     } reject: { error in
                         fail("Error while rates test-request \(error)")
@@ -77,7 +79,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                         fail("Failed to decode pre-fetched convert JSON")
                     }
 
-                    SimpleCurrencyConverter(exchangeRatesAPIKey: "mockApiKey", urlSession: session).convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
+                    simpleCurrencyConverter.convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
                         expect(preFetchedItem).to(equal(result["JPY"]))
                     } reject: { error in
                         fail("Error while rates test-request \(error)")
@@ -87,6 +89,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
             
             afterEach {
                 session = nil
+                simpleCurrencyConverter = nil
             }
         }
     }
