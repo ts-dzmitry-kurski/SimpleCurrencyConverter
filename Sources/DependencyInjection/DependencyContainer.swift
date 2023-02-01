@@ -1,6 +1,6 @@
 import Foundation
 
-final class DependencyContainer: DependencyProtocol {
+public final class DependencyContainer: DependencyProtocol {
 
   static let shared = DependencyContainer()
 
