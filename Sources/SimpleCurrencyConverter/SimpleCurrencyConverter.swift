@@ -11,16 +11,24 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String = ""
     private var networkManager: ExchangeRatesNetworkManager?
+    private static var sharedInstance: CurrencyConverterProtocol?
     
-    /// Public setup method for a class that allows for the setting of an exchange rates API key and a URL session.
+    /// Public setup singleton instance method for a class that allows for the setting of an exchange rates API key and a URL session.
     ///
     /// If an exchange rates API key is provided, it is set to the class's exchangeRatesAPIKey property.
     /// If no exchange rates API key is provided, the class attempts to retrieve an API key from a plist file using the ExchangeRatesAPIKey keyword.
     ///
-    ///If a URL session is provided, it is used to initialize the class's network manager.
-    ///If no URL session is provided, the class's network manager is initialized with the shared URL session.
+    /// If a URL session is provided, it is used to initialize the class's network manager.
+    /// If no URL session is provided, the class's network manager is initialized with the shared URL session.
+
+    public static func shared(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol {
+        if sharedInstance == nil {
+            sharedInstance = setup(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession)
+        }
+        return sharedInstance!
+    }
     
-    public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
+    private static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
         let container = DependencyContainer.shared
         container.register(type: CurrencyConverterProtocol.self, component: SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession))
         return DependencyContainer.shared.resolve(type: CurrencyConverterProtocol.self)

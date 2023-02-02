@@ -15,7 +15,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "97"
-            endingLineNumber = "97">
+            endingLineNumber = "97"
+            landmarkName = "SimpleCurrencyConverterSpecs"
+            landmarkType = "3">
             <Locations>
                <Location
                   uuid = "204071A0-B393-4E56-9F79-7BB2ACFBB459 - 52e3cf59061b3c11"
