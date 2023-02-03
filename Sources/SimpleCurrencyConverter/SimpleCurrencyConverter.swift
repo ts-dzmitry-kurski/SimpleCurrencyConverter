@@ -38,7 +38,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         if let exchangeRatesAPIKey = exchangeRatesAPIKey {
             self.exchangeRatesAPIKey = exchangeRatesAPIKey
         } else {
-            self.exchangeRatesAPIKey = getAPIKeyFromPlistFile()
+            self.exchangeRatesAPIKey = apiKeyFromPlistFile
         }
 
         if let urlSession = urlSession {
@@ -48,12 +48,12 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         }
     }
     
-    public func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency],
-                         resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
-        if #available(iOS 13.0, *) {
+    public func getExchangeRate(
+        baseCurrency: Currency, targetCurrencies: [Currency],
+        resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
-                    apiKey: exchangeRatesAPIKey, url: getExhangeRatesURL().get(), base: baseCurrency, target: targetCurrencies)
+                    apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
                     resolve(rates)
@@ -63,14 +63,13 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
                 }
             }
         }
-    }
     
-    public func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency,
-                 resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void) {
-        if #available(iOS 13.0, *) {
+    public func convert(
+        amount: Double, baseCurrency: Currency, targetCurrency: Currency,
+        resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void) {
             Task {
                 let result = try await networkManager?.requestConvert(
-                    apiKey: exchangeRatesAPIKey, url: getConvertURL().get(), amount: amount, base: baseCurrency, target: targetCurrency)
+                    apiKey: exchangeRatesAPIKey, url: convertURL.get(), amount: amount, base: baseCurrency, target: targetCurrency)
                 switch result {
                 case .success(let result):
                     resolve(result)
@@ -80,14 +79,13 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
                 }
             }
         }
-    }
     
-    public func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
-                 resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
-        if #available(iOS 13.0, *) {
+    public func convert(
+        amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
+        resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
-                    apiKey: exchangeRatesAPIKey, url: getExhangeRatesURL().get(), base: baseCurrency, target: targetCurrencies)
+                    apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
                     var modifiedRates = rates
@@ -102,12 +100,11 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
                 }
             }
         }
-    }
 }
 
 private extension SimpleCurrencyConverter {
     
-    func getAPIKeyFromPlistFile() -> String {
+    var apiKeyFromPlistFile: String {
         guard let key = Bundle.main.infoDictionary?["ExchangeRatesAPIKey"] as? String else {
             fatalError("Failed to get exchangerates.io API key from info.plist file")
         }
@@ -115,7 +112,7 @@ private extension SimpleCurrencyConverter {
         return key
     }
     
-    func getExhangeRatesURL() -> (Result<URL, Error>) {
+    var exhangeRatesURL: (Result<URL, Error>) {
         if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/latest") {
             return .success(existingURL)
         } else {
@@ -123,7 +120,7 @@ private extension SimpleCurrencyConverter {
         }
     }
     
-    func getConvertURL() -> (Result<URL, Error>) {
+    var convertURL: (Result<URL, Error>) {
         if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/convert") {
             return .success(existingURL)
         } else {
