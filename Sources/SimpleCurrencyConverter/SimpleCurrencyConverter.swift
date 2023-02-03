@@ -23,16 +23,16 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
     public static func shared() -> CurrencyConverterProtocol {
         if sharedInstance == nil {
-            sharedInstance = setup()
+            fatalError("❗ Shared instance is used without framework initialization ❗")
         }
         return sharedInstance!
     }
     
-    public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
+    public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol {
         let container = DependencyContainer()
         sharedInstance = SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession)
         container.register(type: CurrencyConverterProtocol.self, component: sharedInstance!)
-        return container.resolve(type: CurrencyConverterProtocol.self)
+        return container.resolve(type: CurrencyConverterProtocol.self)!
     }
     
     private init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) {
@@ -52,7 +52,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     public func getExchangeRate(
         baseCurrency: Currency,
         targetCurrencies: [Currency],
-        completion: @escaping (Result<[String : Double], Error>) -> Void) {
+        completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
@@ -88,7 +88,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         amount: Double,
         baseCurrency: Currency,
         targetCurrencies: [Currency],
-        completion: @escaping (Result<[String : Double], Error>) -> Void) {
+        completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
@@ -112,7 +112,7 @@ private extension SimpleCurrencyConverter {
     
     var apiKeyFromPlistFile: String {
         guard let key = Bundle.main.infoDictionary?["ExchangeRatesAPIKey"] as? String else {
-            fatalError("Failed to get exchangerates.io API key from info.plist file")
+            fatalError("❗ Failed to get exchangerates.io API key from info.plist file ❗")
         }
         
         return key

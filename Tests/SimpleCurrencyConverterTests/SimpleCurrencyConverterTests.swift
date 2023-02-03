@@ -35,12 +35,12 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                         return (response!, data)
                     }
 
-                    var preFetchedItem: [String: Double]?
+                    var preFetchedItem: [Currency: Double]?
 
                     if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                        let jsonDict = jsonObject as? [String: Any],
                        let rates = jsonDict["rates"] as? [String: Double] {
-                        preFetchedItem = rates
+                        preFetchedItem = ExchangeRatesNetworkManager.transformToCurrencyKeys(ratesDict: rates)
                     } else {
                         fail("Failed to decode pre-fetched rates JSON")
                     }
@@ -85,7 +85,7 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                     simpleCurrencyConverter.convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
                         switch result {
                         case .success(let convertResult):
-                            expect(preFetchedItem).to(equal(convertResult["JPY"]))
+                            expect(preFetchedItem).to(equal(convertResult[.JPY]))
                         case .failure(let error):
                             fail("Error while rates test-request \(error)")
                         }

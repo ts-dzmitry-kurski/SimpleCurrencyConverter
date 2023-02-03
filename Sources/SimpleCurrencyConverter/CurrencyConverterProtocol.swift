@@ -13,7 +13,7 @@ public protocol CurrencyConverterProtocol {
     ///  - Parameter resolve: A closure that takes in a dictionary of exchange rates, where the keys are the currency codes of the target currencies and the values are the exchange rates (expressed as a Double)
     ///  - Parameter reject: A closure that takes in an error object, it will be called if an error occurs while trying to get the exchange rates.
 
-    func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[String: Double], Error>) -> Void)
+    func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[Currency: Double], Error>) -> Void)
     
     /// This function is used to convert an amount of money from one currency to another.
     ///
@@ -37,5 +37,5 @@ public protocol CurrencyConverterProtocol {
     ///        - Parameter resolve: A closure that takes in a dictionary of converted amount, where the keys are the currency codes of the target currencies and the values are the converted amount (expressed as a Double)
     ///        - Parameter reject: A closure that takes in an error object, it will be called if an error occurs while trying to convert the amount
 
-    func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[String: Double], Error>) -> Void)
+    func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[Currency: Double], Error>) -> Void)
 }

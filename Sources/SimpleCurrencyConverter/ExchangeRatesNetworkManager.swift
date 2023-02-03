@@ -15,7 +15,7 @@ final class ExchangeRatesNetworkManager {
         self.session = session
     }
     
-    func requestExchangeRate(apiKey: String, url: URL, base: Currency, target: [Currency]) async throws -> Result<[String: Double], Error> {
+    func requestExchangeRate(apiKey: String, url: URL, base: Currency, target: [Currency]) async throws -> Result<[Currency: Double], Error> {
         do {
             let querryItems = [URLQueryItem(name: "base", value: base.rawValue),
                                URLQueryItem(name: "symbols", value: target.map { $0.rawValue }.joined(separator: ", "))]
@@ -39,7 +39,7 @@ final class ExchangeRatesNetworkManager {
             if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                let jsonDict = jsonObject as? [String: Any],
                let rates = jsonDict["rates"] as? [String: Double] {
-                return .success(rates)
+                return .success(ExchangeRatesNetworkManager.transformToCurrencyKeys(ratesDict: rates))
             } else {
                 return .failure(ExchangeRatesError.failedToDecodeResponse)
             }
@@ -82,4 +82,18 @@ final class ExchangeRatesNetworkManager {
         }
     }
     
+}
+
+extension ExchangeRatesNetworkManager {
+    
+    static func transformToCurrencyKeys(ratesDict: [String : Double]) -> [Currency: Double] {
+        var modifiedRatesDict: [Currency: Double] = [:]
+        for (key, value) in ratesDict {
+            if let currencyKey = Currency(rawValue: key) {
+                modifiedRatesDict[currencyKey] = value
+            }
+        }
+        
+        return modifiedRatesDict
+    }
 }
