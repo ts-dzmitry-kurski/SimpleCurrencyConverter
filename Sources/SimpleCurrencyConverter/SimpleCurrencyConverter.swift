@@ -21,16 +21,17 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     /// If a URL session is provided, it is used to initialize the class's network manager.
     /// If no URL session is provided, the class's network manager is initialized with the shared URL session.
 
-    public static func shared(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol {
+    public static func shared() -> CurrencyConverterProtocol {
         if sharedInstance == nil {
-            sharedInstance = setup(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession)
+            sharedInstance = setup()
         }
         return sharedInstance!
     }
     
-    private static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
+    public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
         let container = DependencyContainer()
-        container.register(type: CurrencyConverterProtocol.self, component: SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession))
+        sharedInstance = SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession)
+        container.register(type: CurrencyConverterProtocol.self, component: sharedInstance!)
         return container.resolve(type: CurrencyConverterProtocol.self)
     }
     
