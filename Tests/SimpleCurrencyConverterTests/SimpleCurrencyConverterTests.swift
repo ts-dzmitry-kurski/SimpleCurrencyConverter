@@ -44,11 +44,14 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                     } else {
                         fail("Failed to decode pre-fetched rates JSON")
                     }
-
-                    simpleCurrencyConverter.getExchangeRate(
-                        baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { rates in                        expect(preFetchedItem).to(equal(rates))
-                    } reject: { error in
-                        fail("Error while rates test-request \(error)")
+                    
+                    simpleCurrencyConverter.getExchangeRate(baseCurrency: .USD, targetCurrencies: [.GBP, .JPY, .EUR]) { result in
+                        switch result {
+                        case .success(let rates):
+                            expect(preFetchedItem).to(equal(rates))
+                        case .failure(let error):
+                            fail("Error while rates test-request \(error)")
+                        }
                     }
                 }
             }
@@ -78,11 +81,14 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                     } else {
                         fail("Failed to decode pre-fetched convert JSON")
                     }
-
+                    
                     simpleCurrencyConverter.convert(amount: 25, baseCurrency: .GBP, targetCurrencies: [.JPY]) { result in
-                        expect(preFetchedItem).to(equal(result["JPY"]))
-                    } reject: { error in
-                        fail("Error while rates test-request \(error)")
+                        switch result {
+                        case .success(let convertResult):
+                            expect(preFetchedItem).to(equal(convertResult["JPY"]))
+                        case .failure(let error):
+                            fail("Error while rates test-request \(error)")
+                        }
                     }
                 }
             }

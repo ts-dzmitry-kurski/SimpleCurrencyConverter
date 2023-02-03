@@ -29,9 +29,9 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     }
     
     private static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol? {
-        let container = DependencyContainer.shared
+        let container = DependencyContainer()
         container.register(type: CurrencyConverterProtocol.self, component: SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession))
-        return DependencyContainer.shared.resolve(type: CurrencyConverterProtocol.self)
+        return container.resolve(type: CurrencyConverterProtocol.self)
     }
     
     private init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) {
@@ -49,40 +49,45 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     }
     
     public func getExchangeRate(
-        baseCurrency: Currency, targetCurrencies: [Currency],
-        resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
+        baseCurrency: Currency,
+        targetCurrencies: [Currency],
+        completion: @escaping (Result<[String : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
-                    resolve(rates)
+                    completion(.success(rates))
                 case .failure(let error):
-                    reject(error)
+                    completion(.failure(error))
                 default: ()
                 }
             }
         }
     
     public func convert(
-        amount: Double, baseCurrency: Currency, targetCurrency: Currency,
-        resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void) {
+        amount: Double,
+        baseCurrency: Currency,
+        targetCurrency: Currency,
+        completion: @escaping (Result<Double, Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestConvert(
                     apiKey: exchangeRatesAPIKey, url: convertURL.get(), amount: amount, base: baseCurrency, target: targetCurrency)
                 switch result {
                 case .success(let result):
-                    resolve(result)
+                    completion(.success(result))
                 case .failure(let error):
-                    reject(error)
+                    completion(.failure(error))
                 default: ()
                 }
             }
         }
     
     public func convert(
-        amount: Double, baseCurrency: Currency, targetCurrencies: [Currency],
-        resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void) {
+        amount: Double,
+        baseCurrency: Currency,
+        targetCurrencies: [Currency],
+        completion: @escaping (Result<[String : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
@@ -93,9 +98,9 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
                         let value = rate.value * amount
                         modifiedRates.updateValue(value, forKey: rate.key)
                     }
-                    resolve(modifiedRates)
+                    completion(.success(modifiedRates))
                 case .failure(let error):
-                    reject(error)
+                    completion(.failure(error))
                 default: ()
                 }
             }
