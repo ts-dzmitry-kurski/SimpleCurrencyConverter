@@ -26,31 +26,31 @@ The framework uses [https://exchangeratesapi.io](https://exchangeratesapi.io/) A
 ### Build-time configuration:
 
 Add the following entry in your app's `Info.plist`: 
-`ExchangeRatesAPIKey` - your_subscription_key
+
+`ExchangeRatesAPIKey` - *your_subscription_key*
 
 ### Runtime configuration:
 
 Provide a value for `exchangeRatesAPIKey` parameter when calling init() method.
 
-    public init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil)
+```public init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil)```
 
-**Warning!** **The runtime configuration values take precedence over build-time configuration.**
+⚠️ **Warning!** **The runtime configuration values take precedence over build-time configuration.** ⚠️
 
 ## Usage:
 
 ### Initialization:
 The first step is to import the framework:
 
-    import SimpleCurrencyConverter
+``import SimpleCurrencyConverter``
 
+The next step is to configure the framework object, like so:
 
-The next step is to initialize the framework object, like so:
+``private var simpleCurrencyConverter = SimpleCurrencyConverter.setup()``
 
-    let simpleCurrencyConverter: CurrencyConverterProtocol = SimpleCurrencyConverter()
+Setup method signature: 
 
-Initializator signature: 
-
-    public init(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil)
+```public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol```
 
 If an exchange rates API key is provided, it is set to the class's exchangeRatesAPIKey property. If no exchange rates API key is provided, the class attempts to retrieve an API key from a plist file using the ExchangeRatesAPIKey keyword.
 
@@ -60,17 +60,14 @@ If no URL session is provided, the class's network manager is initialized with t
 ### Methods:
 There are three methods to choose from:
 
-    func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency], 
-        resolve: @escaping ([String: Double]) -> Void, reject: @escaping (Error) -> Void)
+```func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[Currency: Double], Error>) -> Void)```
 
 This function uses the network manager to make a request to an exchange rates API, passing the base currency code and the target currency codes as parameters.
 
-    func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency, 
-        resolve: @escaping (Double) -> Void, reject: @escaping (Error) -> Void)
+```func convert(amount: Double, baseCurrency: Currency, targetCurrency: Currency, completion: @escaping (Result<Double, Error>) -> Void)```
 
 This function uses the exchange rate between the base currency and the target currency to convert the amount and returns the converted amount through the resolve closure. 
 
-    func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency], 
-        resolve: @escaping ([String : Double]) -> Void, reject: @escaping (Error) -> Void)
+```func convert(amount: Double, baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[Currency: Double], Error>) -> Void)```
 
 This function uses the exchange rate between the base currency and the target currencies to convert the amount to all the target currencies, it returns the converted amount in all the target currencies through the resolve closure as a dictionary.
