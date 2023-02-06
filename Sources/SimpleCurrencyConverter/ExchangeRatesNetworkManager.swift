@@ -6,6 +6,19 @@ public enum ExchangeRatesError: Error {
     case invalidResponse
     case failedToDecodeResponse
 }
+ 
+enum Keys {
+    static let base = "base"
+    static let symbols = "symbols"
+    static let rates = "rates"
+    static let from = "from"
+    static let to = "to"
+    static let amount = "amount"
+    static let result = "result"
+    
+    static let httpMethod = "GET"
+    static let httpHeader = "apikey"
+}
 
 final class ExchangeRatesNetworkManager {
     
@@ -15,10 +28,10 @@ final class ExchangeRatesNetworkManager {
         self.session = session
     }
     
-    func requestExchangeRate(apiKey: String, url: URL, base: Currency, target: [Currency]) async throws -> Result<[Currency: Double], Error> {
+    func requestExchangeRate(apiKey: String?, url: URL, base: Currency, target: [Currency]) async throws -> Result<[Currency: Double], Error> {
         do {
-            let querryItems = [URLQueryItem(name: "base", value: base.rawValue),
-                               URLQueryItem(name: "symbols", value: target.map { $0.rawValue }.joined(separator: ", "))]
+            let querryItems = [URLQueryItem(name: Keys.base, value: base.rawValue),
+                               URLQueryItem(name: Keys.symbols, value: target.map { $0.rawValue }.joined(separator: ", "))]
             var urlComps = URLComponents(string: url.absoluteString)
             urlComps?.queryItems = querryItems
             
@@ -27,8 +40,8 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = "GET"
-            request.setValue(apiKey, forHTTPHeaderField: "apikey")
+            request.httpMethod = Keys.httpMethod
+            request.setValue(apiKey, forHTTPHeaderField: Keys.httpHeader)
             
             let (data, response) = try await session.data(for: request)
             
@@ -38,7 +51,7 @@ final class ExchangeRatesNetworkManager {
             
             if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                let jsonDict = jsonObject as? [String: Any],
-               let rates = jsonDict["rates"] as? [String: Double] {
+               let rates = jsonDict[Keys.rates] as? [String: Double] {
                 return .success(ExchangeRatesNetworkManager.transformToCurrencyKeys(ratesDict: rates))
             } else {
                 return .failure(ExchangeRatesError.failedToDecodeResponse)
@@ -48,11 +61,11 @@ final class ExchangeRatesNetworkManager {
         }
     }
     
-    func requestConvert(apiKey: String, url: URL, amount: Double, base: Currency, target: Currency) async throws -> Result<Double, Error> {
+    func requestConvert(apiKey: String?, url: URL, amount: Double, base: Currency, target: Currency) async throws -> Result<Double, Error> {
         do {
-            let querryItems = [URLQueryItem(name: "from", value: base.rawValue),
-                               URLQueryItem(name: "to", value: target.rawValue),
-                               URLQueryItem(name: "amount", value: String(amount))]
+            let querryItems = [URLQueryItem(name: Keys.from, value: base.rawValue),
+                               URLQueryItem(name: Keys.to, value: target.rawValue),
+                               URLQueryItem(name: Keys.amount, value: String(amount))]
             var urlComps = URLComponents(string: url.absoluteString)
             urlComps?.queryItems = querryItems
             
@@ -61,8 +74,8 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = "GET"
-            request.setValue(apiKey, forHTTPHeaderField: "apikey")
+            request.httpMethod = Keys.httpMethod
+            request.setValue(apiKey, forHTTPHeaderField: Keys.httpHeader)
             
             let (data, response) = try await session.data(for: request)
             
@@ -72,7 +85,7 @@ final class ExchangeRatesNetworkManager {
             
             if let jsonObject = try? JSONSerialization.jsonObject(with: data),
                let jsonDict = jsonObject as? [String: Any],
-               let result = jsonDict["result"] as? Double {
+               let result = jsonDict[Keys.result] as? Double {
                 return .success(result)
             } else {
                 return .failure(ExchangeRatesError.failedToDecodeResponse)

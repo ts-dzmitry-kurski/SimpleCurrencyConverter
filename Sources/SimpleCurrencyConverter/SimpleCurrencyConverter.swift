@@ -9,7 +9,7 @@ public enum Currency: String {
 
 public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
-    private var exchangeRatesAPIKey: String = ""
+    private var exchangeRatesAPIKey: String?
     private var networkManager: ExchangeRatesNetworkManager?
     private static var sharedInstance: CurrencyConverterProtocol?
     
@@ -21,11 +21,12 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     /// If a URL session is provided, it is used to initialize the class's network manager.
     /// If no URL session is provided, the class's network manager is initialized with the shared URL session.
 
-    public static func shared() -> CurrencyConverterProtocol {
+    public static func shared() -> CurrencyConverterProtocol? {
         if sharedInstance == nil {
-            fatalError("❗ Shared instance is used without framework initialization ❗")
+            assertionFailure("❗ Shared instance is used without framework initialization ❗")
+            return nil
         }
-        return sharedInstance!
+        return sharedInstance
     }
     
     public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) -> CurrencyConverterProtocol {
@@ -55,7 +56,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
-                    apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
+                    apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
                     completion(.success(rates))
@@ -91,7 +92,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 let result = try await networkManager?.requestExchangeRate(
-                    apiKey: exchangeRatesAPIKey, url: exhangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
+                    apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
                     var modifiedRates = rates
@@ -110,15 +111,16 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
 private extension SimpleCurrencyConverter {
     
-    var apiKeyFromPlistFile: String {
+    var apiKeyFromPlistFile: String? {
         guard let key = Bundle.main.infoDictionary?["ExchangeRatesAPIKey"] as? String else {
-            fatalError("❗ Failed to get exchangerates.io API key from info.plist file ❗")
+            assertionFailure("❗ Failed to get exchangerates.io API key from info.plist file ❗")
+            return nil
         }
         
         return key
     }
     
-    var exhangeRatesURL: (Result<URL, Error>) {
+    var exchangeRatesURL: (Result<URL, Error>) {
         if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/latest") {
             return .success(existingURL)
         } else {
