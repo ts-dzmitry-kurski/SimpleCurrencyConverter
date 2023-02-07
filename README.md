@@ -46,7 +46,7 @@ The first step is to import the framework:
 
 The next step is to configure the framework object, like so:
 
-``private var simpleCurrencyConverter = SimpleCurrencyConverter.setup()``
+``SimpleCurrencyConverter.setup()``
 
 Setup method signature: 
 
@@ -58,6 +58,11 @@ If a URL session is provided, it is used to initialize the class's network manag
 If no URL session is provided, the class's network manager is initialized with the shared URL session.
 
 ### Methods:
+
+To access framework methods use shared instance:
+
+``SimpleCurrencyConverter.shared()``
+
 There are three methods to choose from:
 
 ```func getExchangeRate(baseCurrency: Currency, targetCurrencies: [Currency], completion: @escaping (Result<[Currency: Double], Error>) -> Void)```
