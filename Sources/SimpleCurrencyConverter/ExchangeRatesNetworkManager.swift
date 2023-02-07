@@ -5,6 +5,7 @@ public enum ExchangeRatesError: Error {
     case failedToConfigureURL
     case invalidResponse
     case failedToDecodeResponse
+    case failedToGetApiKey
 }
  
 enum Keys {
@@ -16,8 +17,10 @@ enum Keys {
     static let amount = "amount"
     static let result = "result"
     
-    static let httpMethod = "GET"
-    static let httpHeader = "apikey"
+    enum Header {
+        static let apiKey = "apikey"
+        static let getMethod = "GET"
+    }
 }
 
 final class ExchangeRatesNetworkManager {
@@ -28,7 +31,7 @@ final class ExchangeRatesNetworkManager {
         self.session = session
     }
     
-    func requestExchangeRate(apiKey: String?, url: URL, base: Currency, target: [Currency]) async throws -> Result<[Currency: Double], Error> {
+    func requestExchangeRate(apiKey: String, url: URL, base: Currency, target: [Currency]) async throws -> Result<[Currency: Double], Error> {
         do {
             let querryItems = [URLQueryItem(name: Keys.base, value: base.rawValue),
                                URLQueryItem(name: Keys.symbols, value: target.map { $0.rawValue }.joined(separator: ", "))]
@@ -40,8 +43,8 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = Keys.httpMethod
-            request.setValue(apiKey, forHTTPHeaderField: Keys.httpHeader)
+            request.httpMethod = Keys.Header.getMethod
+            request.setValue(apiKey, forHTTPHeaderField: Keys.Header.apiKey)
             
             let (data, response) = try await session.data(for: request)
             
@@ -61,7 +64,7 @@ final class ExchangeRatesNetworkManager {
         }
     }
     
-    func requestConvert(apiKey: String?, url: URL, amount: Double, base: Currency, target: Currency) async throws -> Result<Double, Error> {
+    func requestConvert(apiKey: String, url: URL, amount: Double, base: Currency, target: Currency) async throws -> Result<Double, Error> {
         do {
             let querryItems = [URLQueryItem(name: Keys.from, value: base.rawValue),
                                URLQueryItem(name: Keys.to, value: target.rawValue),
@@ -74,8 +77,8 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = Keys.httpMethod
-            request.setValue(apiKey, forHTTPHeaderField: Keys.httpHeader)
+            request.httpMethod = Keys.Header.getMethod
+            request.setValue(apiKey, forHTTPHeaderField: Keys.Header.apiKey)
             
             let (data, response) = try await session.data(for: request)
             

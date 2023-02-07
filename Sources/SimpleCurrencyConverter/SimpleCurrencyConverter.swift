@@ -54,6 +54,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         targetCurrencies: [Currency],
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
+                guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
@@ -72,6 +73,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         targetCurrency: Currency,
         completion: @escaping (Result<Double, Error>) -> Void) {
             Task {
+                guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
                 let result = try await networkManager?.requestConvert(
                     apiKey: exchangeRatesAPIKey, url: convertURL.get(), amount: amount, base: baseCurrency, target: targetCurrency)
                 switch result {
@@ -90,6 +92,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         targetCurrencies: [Currency],
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
+                guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
                 let result = try await networkManager?.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
