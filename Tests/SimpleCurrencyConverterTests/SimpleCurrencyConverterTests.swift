@@ -16,7 +16,8 @@ final class SimpleCurrencyConverterSpecs: QuickSpec {
                 let configuration = URLSessionConfiguration.ephemeral
                 configuration.protocolClasses = [MockURLSessionProtocol.self]
                 session = URLSession(configuration: configuration)
-                simpleCurrencyConverter = SimpleCurrencyConverter.setup(exchangeRatesAPIKey: "mockApiKey", urlSession: session)
+                SimpleCurrencyConverter.setup(exchangeRatesAPIKey: "mockApiKey", urlSession: session)
+                simpleCurrencyConverter = SimpleCurrencyConverter.shared()
             }
             
             context("with pre-fetched json rates reponse") {

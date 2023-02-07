@@ -2,6 +2,7 @@ import Foundation
 
 public final class DependencyContainer: DependencyProtocol {
 
+    static let shared = DependencyContainer()
     private var dependencies: [String: Any] = [:]
     
     public func register<Dependency>(type: Dependency.Type, component dependency: Any) {
