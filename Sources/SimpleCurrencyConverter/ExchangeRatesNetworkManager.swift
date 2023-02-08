@@ -19,6 +19,9 @@ enum Keys {
     
     enum Header {
         static let apiKey = "apikey"
+    }
+    
+    enum Request {
         static let getMethod = "GET"
     }
 }
@@ -43,7 +46,7 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = Keys.Header.getMethod
+            request.httpMethod = Keys.Request.getMethod
             request.setValue(apiKey, forHTTPHeaderField: Keys.Header.apiKey)
             
             let (data, response) = try await session.data(for: request)
@@ -77,7 +80,7 @@ final class ExchangeRatesNetworkManager {
             }
             
             var request = URLRequest(url: modifiedURL)
-            request.httpMethod = Keys.Header.getMethod
+            request.httpMethod = Keys.Request.getMethod
             request.setValue(apiKey, forHTTPHeaderField: Keys.Header.apiKey)
             
             let (data, response) = try await session.data(for: request)
