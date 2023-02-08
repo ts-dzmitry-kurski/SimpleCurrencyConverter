@@ -6,6 +6,7 @@ public enum ExchangeRatesError: Error {
     case invalidResponse
     case failedToDecodeResponse
     case failedToGetApiKey
+    case failedToAccessNetworkManager
 }
  
 enum Keys {

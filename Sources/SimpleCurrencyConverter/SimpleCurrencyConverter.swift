@@ -55,14 +55,14 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
-                let result = try await networkManager?.requestExchangeRate(
+                guard let existingNetworkManager = networkManager else { return completion(.failure(ExchangeRatesError.failedToAccessNetworkManager)) }
+                let result = try await existingNetworkManager.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
                     completion(.success(rates))
                 case .failure(let error):
                     completion(.failure(error))
-                default: ()
                 }
             }
         }
@@ -74,14 +74,14 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         completion: @escaping (Result<Double, Error>) -> Void) {
             Task {
                 guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
-                let result = try await networkManager?.requestConvert(
+                guard let existingNetworkManager = networkManager else { return completion(.failure(ExchangeRatesError.failedToAccessNetworkManager)) }
+                let result = try await existingNetworkManager.requestConvert(
                     apiKey: exchangeRatesAPIKey, url: convertURL.get(), amount: amount, base: baseCurrency, target: targetCurrency)
                 switch result {
                 case .success(let result):
                     completion(.success(result))
                 case .failure(let error):
                     completion(.failure(error))
-                default: ()
                 }
             }
         }
@@ -93,7 +93,8 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
         completion: @escaping (Result<[Currency : Double], Error>) -> Void) {
             Task {
                 guard let exchangeRatesAPIKey = exchangeRatesAPIKey else { return completion(.failure(ExchangeRatesError.failedToGetApiKey)) }
-                let result = try await networkManager?.requestExchangeRate(
+                guard let existingNetworkManager = networkManager else { return completion(.failure(ExchangeRatesError.failedToAccessNetworkManager)) }
+                let result = try await existingNetworkManager.requestExchangeRate(
                     apiKey: exchangeRatesAPIKey, url: exchangeRatesURL.get(), base: baseCurrency, target: targetCurrencies)
                 switch result {
                 case .success(let rates):
@@ -105,7 +106,6 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
                     completion(.success(modifiedRates))
                 case .failure(let error):
                     completion(.failure(error))
-                default: ()
                 }
             }
         }
