@@ -123,19 +123,17 @@ private extension SimpleCurrencyConverter {
     }
     
     var exchangeRatesURL: (Result<URL, Error>) {
-        if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/latest") {
-            return .success(existingURL)
-        } else {
+        guard let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/latest") else {
             return .failure(ExchangeRatesError.failedToConfigureURL)
         }
+        return .success(existingURL)
     }
     
     var convertURL: (Result<URL, Error>) {
-        if let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/convert") {
-            return .success(existingURL)
-        } else {
+        guard let existingURL = URL(string: "https://api.apilayer.com/exchangerates_data/convert") else {
             return .failure(ExchangeRatesError.failedToConfigureURL)
         }
+        return .success(existingURL)
     }
     
 }
