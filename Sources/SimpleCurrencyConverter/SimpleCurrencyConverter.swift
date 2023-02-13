@@ -11,6 +11,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
 
     private var exchangeRatesAPIKey: String?
     private var networkManager: ExchangeRatesNetworkManager?
+    private static let dependencyContainer = DependencyContainer()
     private static var sharedInstance: CurrencyConverterProtocol?
     
     /// Public setup singleton instance method for a class that allows for the setting of an exchange rates API key and a URL session.
@@ -22,7 +23,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     /// If no URL session is provided, the class's network manager is initialized with the shared URL session.
 
     public static func shared() -> CurrencyConverterProtocol? {
-        guard let sharedInstance = DependencyContainer.shared.resolve(type: CurrencyConverterProtocol.self) else {
+        guard let sharedInstance = dependencyContainer.resolve(type: CurrencyConverterProtocol.self) else {
             assertionFailure("❗ Shared instance is used without framework initialization ❗")
             return nil
         }
@@ -30,7 +31,7 @@ public class SimpleCurrencyConverter: CurrencyConverterProtocol {
     }
     
     public static func setup(exchangeRatesAPIKey: String? = nil, urlSession: URLSession? = nil) {
-        DependencyContainer.shared.register(
+        dependencyContainer.register(
             type: CurrencyConverterProtocol.self,
             component: SimpleCurrencyConverter(exchangeRatesAPIKey: exchangeRatesAPIKey, urlSession: urlSession))
     }
