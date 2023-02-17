@@ -1,6 +1,6 @@
 import Foundation
 
-public final class DependencyContainer: DependencyProtocol {
+class DependencyContainer: DependencyProtocol {
 
     private var dependencies: [String: Any] = [:]
     
